@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import br.com.caelum.financas.dao.MoviementacaoDao;
 import br.com.caelum.financas.modelo.Conta;
 import br.com.caelum.financas.modelo.Movimentacao;
 import br.com.caelum.financas.modelo.TipoMovimentacao;
@@ -23,15 +24,9 @@ public class TesteFuncoesJPQL {
 		conta.setId(2);
 		
 		
-		String jpql = "select distinct avg(m.valor) from Movimentacao m where m.conta.id = conta" +
-		" and m.tipo = :pTipo" +
-		" group by m.data";
+		MoviementacaoDao dao = new MoviementacaoDao(manager);
+		List<Double> medias = dao.getMediasPorDiaETipo(TipoMovimentacao.SAIDA, conta);
 		
-		TypedQuery<Double> query = manager.createQuery(jpql, Double.class);
-		query.setParameter("pTipo", TipoMovimentacao.SAIDA);
-		
-		List<Double> medias = query.getResultList();
-		Double double1 = medias.get(0);
 		
 		for (Double media : medias) {
 			System.out.println("A média é: " + media);
